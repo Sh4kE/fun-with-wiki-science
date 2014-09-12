@@ -20,9 +20,10 @@ def dl_pdf_from_arxiv(url):
     'url' : e.findAll('link',attrs={'type': 'text/html'})[0]['href'],
     'authors': [str(a.next.next.next) for a in e.findAll('author')],
     'title': str(e.title.next),
-    'id': str.split(str(e.id.next),'/')[-1]
+    'id': str.split(str(e.id.next),'/')[-1],
             } for e in s.findAll('entry')]
-  entries = filter(lambda e: db.find_one({'id': e['id']}) == None, entries)
+  entries = filter(lambda e: db.find_one({'id': e['id']}) == None, 
+                   [entry['path'] = generate_filename(entry, directory = c.ARTICLE_DIR for entry in entries)
   map(lambda e: urllib.urlretrieve(e['pdf'], generate_filename(e, directory = c.ARTICLE_DIR)), entries)
   if entries:
     db.insert(entries)
