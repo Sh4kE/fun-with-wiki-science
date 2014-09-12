@@ -28,7 +28,3 @@ def dl_pdf_from_arxiv(url):
     db.insert(entries)
 
 
-def stripAllTags(html):
-        if html is None:
-                return None
-        return ''.join( BeautifulSoup( html ).findAll() )
