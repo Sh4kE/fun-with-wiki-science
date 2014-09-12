@@ -23,7 +23,7 @@ def dl_pdf_from_arxiv(url):
     'id': str.split(str(e.id.next),'/')[-1],
             } for e in s.findAll('entry')]
   entries = filter(lambda e: db.find_one({'id': e['id']}) == None, 
-                   [entry['path'] = generate_filename(entry, directory = c.ARTICLE_DIR for entry in entries)
+                   [entry['path'] = generate_filename(entry, directory = c.ARTICLE_DIR) for entry in entries)
   map(lambda e: urllib.urlretrieve(e['pdf'], generate_filename(e, directory = c.ARTICLE_DIR)), entries)
   if entries:
     db.insert(entries)
