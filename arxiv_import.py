@@ -23,11 +23,10 @@ def dl_pdf_from_arxiv(url):
     'id': str.split(str(e.id.next),'/')[-1]
             } for e in s.findAll('entry')]
   entries = filter(lambda e: db.find_one({'id': e['id']}) == None, entries)
-  print "entries: ", entries
   map(lambda e: urllib.urlretrieve(e['pdf'], generate_filename(e, directory = c.ARTICLE_DIR)), entries)
-  if entries != []:
+  if entries:
     db.insert(entries)
-  
+
 
 def stripAllTags(html):
         if html is None:
