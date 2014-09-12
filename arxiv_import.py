@@ -24,7 +24,9 @@ def dl_pdf_from_arxiv(url):
             } for e in s.findAll('entry')]
   entries = filter(lambda e: db.find_one({'id': e['id']}) == None ,entries)
   map(lambda e: urllib.urlretrieve(e['pdf'], generate_filename(e, directory = c.ARTICLE_DIR)), entries)
-  db.insert(entries)
+  if len(entries):
+    db.insert(entries)
+  
 
 def stripAllTags(html):
         if html is None:
