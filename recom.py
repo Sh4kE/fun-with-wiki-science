@@ -16,3 +16,11 @@ def bow2topics(bow):
 def entry2topics(entry):
     return bow2topics(entry2bow(entry))
     
+def compute_sims(bow, read=[]):
+    entries = list(enumerate(db.find()))
+    index = similarities.MatrixSimilarity(lda[[entry2bow(entry[1]['text']) for entry in entries]])
+    sims = index[lda[bow]]
+    return sims
+
+    
+    
