@@ -6,6 +6,14 @@ from pymongo import MongoClient
 client = MongoClient()
 db = client.articles.entries
 
+def gen_index(seed=db.count()):
+  i = seed
+  while True:
+    i +=1
+    yield i
+
+index = gen_index()
+
 def generate_filename(entry, directory = c.ARTICLE_DIR):
   authors = [a.split()[-1] for a in entry['authors']]
   authors = authors[0]+'_et.al' if len(authors) > 1 else authors[0]
@@ -21,6 +29,7 @@ def dl_pdf_from_arxiv(url):
     'authors': [str(a.next.next.next) for a in e.findAll('author')],
     'title': str(e.title.next),
     'id': str.split(str(e.id.next),'/')[-1],
+    'index': next(index)
             } for e in s.findAll('entry')]
   entries = filter(lambda e: db.find_one({'id': e['id']}) == None, entries)
   for entry in entries:
@@ -28,5 +37,3 @@ def dl_pdf_from_arxiv(url):
   map(lambda e: urllib.urlretrieve(e['pdf'], e['path']), entries)
   if entries:
     db.insert(entries)
-
-
