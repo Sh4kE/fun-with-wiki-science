@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from gensim import corpora, models, similarities
+import gensim
 
 db = MongoClient().articles.entries
 
