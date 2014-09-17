@@ -4,7 +4,7 @@ import gensim
 
 db = MongoClient().articles.entries
 
-lda = gensim.models.LdaModel.load('data/lda_model')
+lda = gensim.models.LdaModel.load('data/lda400')
 dic = gensim.corpora.Dictionary.load_from_text('data/wiki_en_wordids.txt')
 
 def entry2bow(entry):
