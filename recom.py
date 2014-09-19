@@ -22,5 +22,7 @@ def compute_sims(bow, read=[]):
     sims = index[lda[bow]]
     return sims
 
+
+
     
     
