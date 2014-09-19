@@ -14,8 +14,8 @@ class Project(object):
     def add2bow(self, doc):
         docbow = r.entry2bow(doc)
         self.bow = [(e,f+h) for e,f in self.bow for g,h in docbow if e == g]
-        self.bow += [(g,h) for g,h in docbow 
-                     for e in [e for e,f in self.bow]  if g != e]  if self.bow != [] else docbow
+        es = [e for e,_ in self.bow]
+        self.bow += filter(lambda (g,h): not g in es, docbow) if self.bow != [] else docbow
         
     def subfrombow(self, doc):
         docbow = r.entry2bow(doc)
