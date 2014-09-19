@@ -10,6 +10,7 @@ class Project(object):
     def __init__(self, name = ''):
         self.bow = []
         self.name = name
+        self.read = []
 
     def add2bow(self, doc):
         docbow = r.entry2bow(doc)
@@ -29,3 +30,6 @@ class Project(object):
         p = db.find_one({'name': name})
         self.bow = p.bow
         self.name = p.name
+
+    def read(self, doc):
+        read += doc['index']
