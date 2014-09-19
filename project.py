@@ -14,10 +14,13 @@ class Project(object):
     def add2bow(self, doc):
         docbow = r.entry2bow(doc)
         self.bow = [(e,f+h) for e,f in self.bow for g,h in docbow if e == g]
-        self.bow += [(g,h) for g,h in docbow for e in [e for e,f in self.bow] if  g != e] if self.bow != [] else docbow
+        self.bow += [(g,h) for g,h in docbow 
+                     for e in [e for e,f in self.bow]  if g != e]  if self.bow != [] else docbow
         
     def subfrombow(self, doc):
-        pass
+        docbow = r.entry2bow(doc)
+        self.bow = [(e,f-h) for e,f in self.bow for g,h in docbow if e == g]
+        self.bow = filter(lambda (e,f): f > 0, self.bow)
 
     def save(self):
         db.save(self)
