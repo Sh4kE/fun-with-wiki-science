@@ -20,13 +20,13 @@ def generate_filename(entry, directory = c.ARTICLE_DIR):
   title = entry['title'].replace(' ', '_')
   return ''.join([directory, authors,'-',title , '.pdf'])
 
-def dl_pdf_from_arxiv(url):
+def fetch(url):
   html_doc = urllib.urlopen(url).read()
   s = BeautifulSoup(html_doc)
   entries = [{
     'pdf' : e.findAll('link',attrs={'type': 'application/pdf'})[0]['href'],
     'url' : e.findAll('link',attrs={'type': 'text/html'})[0]['href'],
-    'authors': [str(a.next.next.next) for a in e.findAll('author')],
+    'authors': [a.text.strip() for a in e.findAll('author')],
     'title': str(e.title.next),
     'id': str.split(str(e.id.next),'/')[-1],
     'index': next(index)
@@ -37,3 +37,4 @@ def dl_pdf_from_arxiv(url):
   map(lambda e: urllib.urlretrieve(e['pdf'], e['path']), entries)
   if entries:
     db.insert(entries)
+  return [e['index'] for e in entries]
