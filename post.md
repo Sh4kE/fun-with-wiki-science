@@ -19,6 +19,10 @@ choice.
 With this project we would like to implement a basic proof of concept
 using several techniques to achieve the above.
 
+We started this project in another github project, and we are too lazy to
+copy it over into the data-science project. Thus I'm linkting to it here:
+https://github.com/Sh4kE/fun-with-wiki-science
+
 ## Theoretical Approach
 
 ### Semantic analysis
@@ -87,6 +91,72 @@ extension.
 The source of our articles was arxiv, since it makes a lot of articles
 with fulltext available through an API. Parsing of the API was done by beautiful soup.
 
+### How to use it
+
+#### Creating a project
+
+```python
+import project
+logic_project = project.Project("Logic")
+```
+
+#### Adding sources
+
+```python
+import sources
+sources.show_subcats() # gives you a list of all available sub-categories
+                       # from which you can choose some to add
+
+sources.show_subcats("logic") # It is also possible to filter the result.
+# > [('math.LO', 'Logic'), ('cs.LO', 'Logic in Computer Science')]
+
+sources.add_source(('cs.LO', 'Logic in Computer Science'))
+```
+
+#### Downloading PDF's
+
+After adding some sources one can then start to fetch the pdf's, which
+downloads the pdf's into a subdirectory articles in the root directory.
+It also adds entries for all papers into the mongoDB.
+
+```python
+import arxiv_import as ai
+for x in sources.db.find():
+  ai.fetch(x['link'])
+```
+
+#### Extracting text
+This adds a new field text to the entries in the mongoDB.
+
+```python
+import arxiv_preprocessor as ap
+ap.update_db_with_pdf_texts()
+```
+
+#### Rate Up/Down
+After you have read the articles (,which are still inside the articles directory)
+you can go ahead and rate them, either up or down. Rating a paper up means, that it
+gets added to the users bow, in order to give him better recommendations.
+
+Now let's pretend we've read the book Logic Column 18: Alternative Logics: A Book Review
+and it was great ;D
+
+```python
+entry = ai.db.find_one({'title':'Logic Column 18: Alternative Logics: A Book Review'})
+logic_project.up(entry)
+```
+
+#### Recommend
+
+Now we are finally there and we can recommend new undiscovered books.
+
+```python
+import recom
+recoms = recom.recommend(logic_project)
+print recoms[0]['title']
+# > Logic Column 16: Higher-Order Abstract Syntax: Setting the Record\n  Straight
+```
+
 ### Lessons learned
 
 Our initial assumption that this would be complicated and take a long
@@ -99,8 +169,6 @@ using an online learning LDA with already given articles as basis for
 the corpus. This approach may not be practical though since it
 requires the user to have the articles at hand. Therefore a good
 initial corpus should be constructed by selecting seminal papers manually.
-
-
 
 ## Conclusion
 
